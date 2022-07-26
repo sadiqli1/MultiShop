@@ -81,7 +81,6 @@ C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\ru\Mi
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\MultiShop.csproj.AssemblyReference.cache
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\MultiShop.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\MultiShop.AssemblyInfoInputs.cache
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\MultiShop.AssemblyInfo.cs
@@ -149,3 +148,16 @@ C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Dashboard\Index.cshtml.g.cs
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Slider\Index.cshtml.g.cs
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Slider\Create.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Slider\Update.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Slider\Detail.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Category\Index.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Category\Create.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Category\Update.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Category\Detail.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Information\Index.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Information\Create.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\MultiShop.csproj.AssemblyReference.cache
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Information\Update.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Information\Detail.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Dress\Index.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Dress\Create.cshtml.g.cs

@@ -1,12 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MultiShop.DAL;
+using MultiShop.Models;
+using MultiShop.ViewModels;
 
 namespace MultiShop.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
+        }
+        public async Task<IActionResult> Index()
+        {
+            HomeVM model = new HomeVM()
+            {
+                Sliders = await _context.Sliders.ToListAsync(),
+                Categories = await _context.Categories.Include(c => c.Dresses).ToListAsync(),
+            };
+            return View(model);
         }
     }
 }

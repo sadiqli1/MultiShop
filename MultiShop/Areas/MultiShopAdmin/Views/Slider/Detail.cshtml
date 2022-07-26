@@ -1,0 +1,27 @@
+﻿@model Slider
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<div class = "main-panel">
+    <div class = "d-flex">
+        <h4 class = "text-warning">Image:</h4>
+        <img src = "~/assets/img/slider/@Model.Image" />
+    </div>
+    <div class = "mt-3 d-flex">
+        <h4 class = "text-warning">Title:</h4>
+        <h3>@Model.Title</h3>
+    </div>
+    <div class = "mt-3 d-flex">
+        <h4 class = "text-warning">SubTitle:</h4>
+        <h3>@Model.SubTitle</h3>
+    </div>
+    <div class = "mt-3 d-flex">
+        <h4 class = "text-warning">Button Url:</h4>
+        <a href = "@Model.ButtonUrl">Button</a>
+    </div>
+    <div class = "mt-3 d-flex">
+        <h4 class = "text-warning">Order:</h4>
+        <h3>@Model.Order</h3>
+    </div>
+</div>

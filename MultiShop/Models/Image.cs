@@ -1,4 +1,6 @@
-﻿using MultiShop.Models.Base;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
+using MultiShop.Models.Base;
 
 namespace MultiShop.Models
 {

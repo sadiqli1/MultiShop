@@ -23,6 +23,7 @@
     <Folder Include="Areas\MultiShopAdmin\Data\" />
     <Folder Include="Areas\MultiShopAdmin\Models\" />
     <Folder Include="wwwroot\admin\images\slider\" />
+    <Folder Include="wwwroot\assets\img\category\" />
   </ItemGroup>
 
   <ItemGroup>

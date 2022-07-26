@@ -259,6 +259,10 @@
   <!-- End custom js for this page-->
 
   <script src="~/admin/js/jquery.cookie.js" type="text/javascript"></script>
+  @RenderSection("Script",false);
+  @RenderSection("ScriptCategory", false);
+  @RenderSection("ScriptInformation", false);
+
 </body>
 
 </html>

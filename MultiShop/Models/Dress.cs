@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 using MultiShop.Models.Base;
 
 namespace MultiShop.Models
@@ -13,5 +15,9 @@ namespace MultiShop.Models
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public DressInformation DressInformation { get; set; }
+        [NotMapped]
+        public IFormFile MainPhoto { get; set; }
+        [NotMapped]
+        public List<IFormFile> Photos { get; set; }
     }
 }
