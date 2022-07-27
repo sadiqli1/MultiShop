@@ -161,3 +161,4 @@ C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Information\Detail.cshtml.g.cs
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Dress\Index.cshtml.g.cs
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Dress\Create.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Dress\Update.cshtml.g.cs

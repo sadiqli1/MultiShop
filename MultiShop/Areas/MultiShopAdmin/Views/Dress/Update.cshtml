@@ -1,6 +1,6 @@
 ﻿@model Dress
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Update";
 }
 
 <div class = "main-panel">
@@ -11,17 +11,15 @@
                     <div class = "card-body">
                         <form method = "post" enctype = "multipart/form-data">
                             <div>
-                            <h2 style = "color:green">Create Dress</h2>
+                            <h2 style = "color:green">Update Dress</h2>
                         </div>
                         <div class = "mt-3">
-                            <label asp-for = "MainPhoto">Mainphoto:</label><br />
+                            <img style = "width: 250px; height:100px" src = "~/assets/img/@Model.Images.FirstOrDefault(d => d.isMain == true).Name" />
+                        </div>
+                        <div class = "mt-3">
+                            <label asp-for = "MainPhoto">MainPhoto:</label><br />
                             <input asp-for = "MainPhoto" class = "form-control"/>
                             <span asp-validation-for = "MainPhoto" class = "text text-danger"></span>
-                        </div>
-                        <div class = "mt-3">
-                            <label asp-for = "Photos">Another Photos:</label><br />
-                            <input asp-for = "Photos" class = "form-control"/>
-                            <span asp-validation-for = "Photos" class = "text text-danger"></span>
                         </div>
                         <div class = "mt-2">
                             <label asp-for = "Name">Name:</label><br />
@@ -47,9 +45,8 @@
                             <select class = "form-control" asp-for = "CategoryId" asp-items = "@(new SelectList(ViewBag.Category, "Id", "Name"))" ></select>
                         </div>
                         <div class = "mt-3">
-                            <button class = "btn btn-success" style = "color:white" type = "submit">Create</button>
+                            <button class = "btn btn-success" style = "color:white" type = "submit">Update</button>
                         </div>
-
                         </form>
                     </div>
                 </div>
