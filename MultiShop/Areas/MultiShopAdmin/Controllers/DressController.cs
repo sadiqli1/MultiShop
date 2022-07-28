@@ -69,7 +69,7 @@ namespace MultiShop.Areas.MultiShopAdmin.Controllers
                 Image another = new Image()
                 {
                     Name = await item.CreateFile(_env.WebRootPath, "assets/img"),
-                    Alternative = item.Name,
+                    Alternative = dress.Name,
                     isMain = false,
                     Dress = dress
                 };
@@ -78,7 +78,7 @@ namespace MultiShop.Areas.MultiShopAdmin.Controllers
             Image main = new Image()
             {
                 Name = await dress.MainPhoto.CreateFile(_env.WebRootPath, "assets/img"),
-                Alternative = dress.MainPhoto.Name,
+                Alternative = dress.Name,
                 isMain = true,
                 Dress = dress
             };
@@ -96,46 +96,120 @@ namespace MultiShop.Areas.MultiShopAdmin.Controllers
             ViewBag.Category = _context.Categories.ToList();
             return View(existed);
         }
+        //[HttpPost]
+        //[AutoValidateAntiforgeryToken]
+        //public async Task<IActionResult> Update(int? id, Dress dress)
+        //{
+        //    if(id is null || id == 0) return NotFound();
+        //    Dress existed = await _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).FirstOrDefaultAsync(d => d.Id == id);
+
+        //    ViewBag.Information = _context.DressInformations.ToList();
+        //    ViewBag.Category = _context.Categories.ToList();
+
+        //    if (!ModelState.IsValid) return View(existed);
+
+        //    if(dress.MainPhoto == null)
+        //    {
+        //        //dress.Images.FirstOrDefault(i => i.isMain == true).Name = existed.Images.FirstOrDefault(i => i.isMain == true).Name;
+        //    }
+        //    else
+        //    {
+        //        if (!dress.MainPhoto.ImageisOkay(2))
+        //        {
+        //            ModelState.AddModelError("MainPhoto", "Please chosse correct image");
+        //            return View(existed);
+        //        }
+        //        FileValidator.DeleteFile(_env.WebRootPath, "assets/img", existed.Images.FirstOrDefault(i => i.isMain == true).Name);
+        //        dress.Images = new List<Image>();
+        //        Image main = new Image()
+        //        {
+        //            Name = await dress.MainPhoto.CreateFile(_env.WebRootPath, "assets/img"),
+        //            Alternative = dress.Name,
+        //            isMain = true,
+        //            Dress = dress
+        //        };
+        //        _context.Entry(existed).CurrentValues.SetValues(dress);
+        //        existed.Images.FirstOrDefault(i => i.isMain == true).Name = main.Name;
+        //        existed.Images.FirstOrDefault(i => i.isMain == true).Alternative = main.Alternative;
+
+        //        existed.Images.Add(main);
+        //    }
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction("Index");
+        //}
+
+
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int? id, Dress dress)
         {
-            if(id is null || id == 0) return NotFound();
-            Dress existed = await _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).FirstOrDefaultAsync(d => d.Id == id);
+            if(id is null|| id == 0) return NotFound();
+
+            Dress existed = await _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).FirstOrDefaultAsync(d => d.Id==id);
+            if (existed == null) return NotFound();
 
             ViewBag.Information = _context.DressInformations.ToList();
             ViewBag.Category = _context.Categories.ToList();
 
             if (!ModelState.IsValid) return View(existed);
 
-            if(dress.MainPhoto == null)
+            if (dress.MainPhoto == null)
             {
-                dress.Images.FirstOrDefault(i => i.isMain == true).Name = existed.Images.FirstOrDefault(i => i.isMain == true).Name;
+
             }
-            else
+            else if(dress.MainPhoto != null)
             {
                 if (!dress.MainPhoto.ImageisOkay(2))
                 {
-                    ModelState.AddModelError("MainPhoto", "Please chosse correct image");
+                    ModelState.AddModelError("MainPhoto", "Please chosse correct photo");
                     return View(existed);
                 }
+
                 FileValidator.DeleteFile(_env.WebRootPath, "assets/img", existed.Images.FirstOrDefault(i => i.isMain == true).Name);
-                dress.Images = new List<Image>();
+                existed.Images = new List<Image>();
                 Image main = new Image()
                 {
                     Name = await dress.MainPhoto.CreateFile(_env.WebRootPath, "assets/img"),
                     Alternative = dress.Name,
                     isMain = true,
-                    Dress = existed
+                    Dress = dress
                 };
                 _context.Entry(existed).CurrentValues.SetValues(dress);
-                existed.Images.FirstOrDefault(i => i.isMain == true).Name = main.Name;
-                existed.Images.FirstOrDefault(i => i.isMain == true).Alternative = main.Alternative;
-
                 existed.Images.Add(main);
             }
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            if(dress.PhotoIds == null)
+            {
+                if(dress.Photos == null)
+                {
+                    ModelState.AddModelError("Photos", "Please chosse image");
+                    return View(existed);
+                }
+                foreach (var item1 in existed.Images.Where(i => i.isMain == false))
+                {
+                    FileValidator.DeleteFile(_env.WebRootPath, "assets/img", item1.Name);
+                }
+               existed.Images.RemoveAll(x => x.isMain == false);
+
+                foreach (var item in dress.Photos)
+                {
+                    if (!item.ImageisOkay(2))
+                    {
+                        ModelState.AddModelError("Photos", "Please chosse correct photos");
+                        return View(existed);
+                    }
+                    Image another = new Image()
+                    {
+                        Name = await item.CreateFile(_env.WebRootPath, "assets/img"),
+                        Alternative = dress.Name,
+                        isMain = false,
+                        Dress= dress
+                    };
+                    existed.Images.Add(another);
+                }
+            }
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
