@@ -20,6 +20,7 @@ namespace MultiShop.Controllers
         {
             HomeVM model = new HomeVM()
             {
+                Dresses = await _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).ToListAsync(),
                 Sliders = await _context.Sliders.ToListAsync(),
                 Categories = await _context.Categories.Include(c => c.Dresses).ToListAsync(),
             };

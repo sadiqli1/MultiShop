@@ -44,13 +44,13 @@
                             @dress.Id
                           </td>
                           <td>
-                            <img src = "~/assets/img/@dress.Images.FirstOrDefault(i => i.isMain == false).Name" />
+                            <img src = "~/assets/img/@dress.Images.FirstOrDefault(i => i.isMain == true)?.Name" />
                           </td>
                           <td>
                             @dress.Name
                           </td>
                           <td>
-                            @dress.Desc
+                              @(dress.Desc.Length > 90 ? dress.Desc.Substring(0, 90) : dress.Desc)
                           </td>
                           <td>
                             $@dress.Price
@@ -78,7 +78,7 @@
     </div>
 </div>
 
-@section ScriptCategory{
+@section ScriptDress{
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
      <script>
     let btn = document.querySelector(".delete");
