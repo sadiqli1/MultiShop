@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http;
@@ -25,5 +26,9 @@ namespace MultiShop.Models
         public List<IFormFile> Photos { get; set; }
         [NotMapped]
         public List<int> PhotoIds { get; set; }
+        [NotMapped]
+        public int ColorId { get; set; }
+        [NotMapped]
+        public int SizeId { get; set; }
     }
 }
