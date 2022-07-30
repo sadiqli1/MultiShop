@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MultiShop.DAL;
@@ -13,11 +14,13 @@ namespace MultiShop.Controllers
     public class DressController : Controller
     {
         private readonly ApplicationDbContext _context;
+		private readonly UserManager<AppUser> _userManager;
 
-        public DressController(ApplicationDbContext context)
+		public DressController(ApplicationDbContext context ,UserManager<AppUser> userManager)
         {
             _context = context;
-        }
+			_userManager = userManager;
+		}
         public async Task<IActionResult> Detail(int? id)
         {
             if (id == null || id == 0) return NotFound();
@@ -37,52 +40,80 @@ namespace MultiShop.Controllers
         {
             return Json(detailVM.Dress == null);
         }
-        public IActionResult AddBasket(int? id)
+        public async Task<IActionResult> AddBasket(int? id)
         {
             if (id == null || id == 0) return NotFound();
+
             Dress dress = _context.Dresses.FirstOrDefault(d => d.Id == id);
+            if (dress == null) return NotFound();
 
-            string basketstr = HttpContext.Request.Cookies["Basket"];
+            if (User.Identity.IsAuthenticated && User.IsInRole("Member"))
+			{
+                AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if(user == null) return NotFound();
 
-            BasketVM basket;
-
-            if (string.IsNullOrEmpty(basketstr))
-            {
-                basket = new BasketVM();
-                basket.BasketCookieItemVMs = new List<BasketCookieItemVM>();
-
-                BasketCookieItemVM cookiItem = new BasketCookieItemVM()
-                {
-                    Id = dress.Id,
-                    Quantity = 1
-                };
-                basket.BasketCookieItemVMs.Add(cookiItem);
-                basket.TotalPrice = dress.Price;
+                BasketItem existed = await _context.BasketItems.FirstOrDefaultAsync(b => b.AppUserId == user.Id && b.DressId == dress.Id);
+                if(existed == null)
+				{
+                    existed = new BasketItem()
+                    {
+                        Dress = dress,
+                        AppUser = user,
+                        Quantity = 1,
+                        Price = dress.Price
+					};
+                    _context.BasketItems.Add(existed);
+				}
+				else
+				{
+                    existed.Quantity++;
+				}
+                await _context.SaveChangesAsync();
             }
             else
-            {
-                basket = JsonConvert.DeserializeObject<BasketVM>(basketstr);
+			{
+                string basketstr = HttpContext.Request.Cookies["Basket"];
 
-                BasketCookieItemVM existed = basket.BasketCookieItemVMs.FirstOrDefault(b => b.Id == id);
-                if (existed == null)
+                BasketVM basket;
+
+                if (string.IsNullOrEmpty(basketstr))
                 {
+                    basket = new BasketVM();
+                    basket.BasketCookieItemVMs = new List<BasketCookieItemVM>();
+
                     BasketCookieItemVM cookiItem = new BasketCookieItemVM()
                     {
                         Id = dress.Id,
                         Quantity = 1
                     };
                     basket.BasketCookieItemVMs.Add(cookiItem);
-                    basket.TotalPrice += dress.Price;
+                    basket.TotalPrice = dress.Price;
                 }
                 else
                 {
-                    existed.Quantity++;
-                    basket.TotalPrice += dress.Price;
-                }
-            }
+                    basket = JsonConvert.DeserializeObject<BasketVM>(basketstr);
 
-            basketstr = JsonConvert.SerializeObject(basket);
-            HttpContext.Response.Cookies.Append("Basket", basketstr);
+                    BasketCookieItemVM existed = basket.BasketCookieItemVMs.FirstOrDefault(b => b.Id == id);
+                    if (existed == null)
+                    {
+                        BasketCookieItemVM cookiItem = new BasketCookieItemVM()
+                        {
+                            Id = dress.Id,
+                            Quantity = 1
+                        };
+                        basket.BasketCookieItemVMs.Add(cookiItem);
+                        basket.TotalPrice += dress.Price;
+                    }
+                    else
+                    {
+                        existed.Quantity++;
+                        basket.TotalPrice += dress.Price;
+                    }
+                }
+
+                basketstr = JsonConvert.SerializeObject(basket);
+                HttpContext.Response.Cookies.Append("Basket", basketstr);
+            }
 
             return RedirectToAction("Index", "Home");
         }

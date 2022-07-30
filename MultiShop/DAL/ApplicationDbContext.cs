@@ -1,14 +1,16 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MultiShop.Models;
 
 namespace MultiShop.DAL
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext:IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
+             
         }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Size> Sizes { get; set; }
@@ -18,8 +20,10 @@ namespace MultiShop.DAL
         public DbSet<Category> Categories { get; set; }
         public DbSet<DressInformation> DressInformations { get; set; }
         public DbSet<Image> Images { get; set; }
+		public DbSet<BasketItem> BasketItems { get; set; }
+		public DbSet<Order> Orders { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var item in modelBuilder.Model.GetEntityTypes()
                 .SelectMany(e => e.GetProperties())

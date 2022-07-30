@@ -23,6 +23,7 @@
     <link href="~/assets/lib/animate/animate.min.css" rel="stylesheet">
     <link href="~/assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
+
     <!-- Customized Bootstrap Stylesheet -->
     <link href="~/assets/css/style.css" rel="stylesheet">
 </head>
@@ -45,8 +46,8 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button">Sign in</button>
-                            <button class="dropdown-item" type="button">Sign up</button>
+                            <a class="dropdown-item" asp-controller = "account" asp-action = "register" >Register</a>
+                            <a class="dropdown-item" asp-controller = "account" asp-action = "login" >Login</a>
                         </div>
                     </div>
                     <div class="btn-group mx-2">

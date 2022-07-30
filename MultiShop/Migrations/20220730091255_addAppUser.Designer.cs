@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MultiShop.DAL;
 
 namespace MultiShop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220730091255_addAppUser")]
+    partial class addAppUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,39 +223,6 @@ namespace MultiShop.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("MultiShop.Models.BasketItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DressId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(6,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("DressId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("BasketItems");
-                });
-
             modelBuilder.Entity("MultiShop.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -367,35 +336,6 @@ namespace MultiShop.Migrations
                     b.HasIndex("DressId");
 
                     b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("MultiShop.Models.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Addres")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool?>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(6,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("MultiShop.Models.Setting", b =>
@@ -518,23 +458,6 @@ namespace MultiShop.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MultiShop.Models.BasketItem", b =>
-                {
-                    b.HasOne("MultiShop.Models.AppUser", "AppUser")
-                        .WithMany("BasketItems")
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("MultiShop.Models.Dress", "Dress")
-                        .WithMany()
-                        .HasForeignKey("DressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MultiShop.Models.Order", null)
-                        .WithMany("BasketItems")
-                        .HasForeignKey("OrderId");
-                });
-
             modelBuilder.Entity("MultiShop.Models.Dress", b =>
                 {
                     b.HasOne("MultiShop.Models.Category", "Category")
@@ -557,13 +480,6 @@ namespace MultiShop.Migrations
                         .HasForeignKey("DressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MultiShop.Models.Order", b =>
-                {
-                    b.HasOne("MultiShop.Models.AppUser", "AppUser")
-                        .WithMany("Orders")
-                        .HasForeignKey("AppUserId");
                 });
 #pragma warning restore 612, 618
         }

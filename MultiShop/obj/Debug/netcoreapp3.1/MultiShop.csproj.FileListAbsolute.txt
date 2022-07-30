@@ -166,4 +166,11 @@ C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Views\Dress\Detail.cshtml.g.cs
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Views\Shop\Index.cshtml.g.cs
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Views\Home\Cart.cshtml.g.cs
-C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\MultiShop.csproj.AssemblyReference.cache
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Views\Account\Login.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Views\Order\Checkout.cshtml.g.cs
