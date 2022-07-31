@@ -33,6 +33,7 @@
 						<div class="col-md-6 form-group">
 							<label>Address</label>
 							<input class="form-control" asp-for="Addres" placeholder="123 Street">
+							<span class = "text-behance text-danger" asp-validation-for = "Addres"></span>
 						</div>
 
 						<div class="col-md-12">
@@ -100,7 +101,8 @@
 				<div class="border-bottom">
 					<h6 class="mb-3">Products</h6>
 
-					@foreach (BasketItem item in items)
+					@if(items != null){
+						@foreach (BasketItem item in items)
 				   {
 					   <div class="d-flex justify-content-between">
                             <p>@item.Dress.Name * @item.Quantity</p>
@@ -108,6 +110,7 @@
                         </div>
                         <div style = "display: none">@(totalprice += (item.Quantity * item.Price))</div>
 				   }
+					}
 
 				</div>
 				<div class="border-bottom pt-3 pb-2">

@@ -22,11 +22,18 @@ namespace MultiShop.Controllers
 		}
 		public async Task<IActionResult> Checkout()
 		{
-			AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (User.Identity.IsAuthenticated)
+            {
+				AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-			List<BasketItem> items = await _context.BasketItems.Include(b => b.Dress).Include(b => b.AppUser).Where(b => b.AppUserId == user.Id).ToListAsync();
-			ViewBag.Items = items;
-			return View();
+				List<BasketItem> items = await _context.BasketItems.Include(b => b.Dress).Include(b => b.AppUser).Where(b => b.AppUserId == user.Id).ToListAsync();
+				ViewBag.Items = items;
+				return View();
+			}
+            else
+            {
+				return RedirectToAction("register", "account");
+            }
 		}
 		[HttpPost]
 		[AutoValidateAntiforgeryToken]
@@ -40,7 +47,7 @@ namespace MultiShop.Controllers
 
 			order.BasketItems = items;
 			order.Date = DateTime.Now;
-			order.AppUser = user;
+			order.AppUser = user; 
 			order.Status = null;
 			order.TotalPrice = default;
 

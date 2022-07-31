@@ -36,7 +36,7 @@
 						@foreach (BasketItemVM item in Model.BasketItemVMs)
 						{
 							<tr>
-								<td class="align-middle"><img src="~/assets/img/@item.Dress.Images.FirstOrDefault(i => i.isMain == true).Name" alt="" style="width: 50px;"> @item.Dress.Name</td>
+								<td class="align-middle"><img src="~/assets/img/@item.Dress.Images.FirstOrDefault(i => i.isMain == true)?.Name" alt="" style="width: 50px;"> @item.Dress?.Name</td>
 								<td class="align-middle">$@item.Dress.Price</td>
 								<td class="align-middle">
 									<div class="input-group quantity mx-auto" style="width: 100px;">
@@ -57,10 +57,11 @@
 								<td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
 							</tr>
 						}
+					}else{
+						<tr>
+							There is no product
+						</tr>
 					}
-					<tr>
-						There is no product
-					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -109,7 +110,7 @@
 							<h5>$0</h5>
 						}
 					</div>
-					<button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button>
+					<a class="btn btn-block btn-primary font-weight-bold my-3 py-3" asp-controller = "order" asp-action = "checkout" >Proceed To Checkout</a>
 				</div>
 			</div>
 		</div>

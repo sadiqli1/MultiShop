@@ -68,7 +68,7 @@
 						@foreach (Color color in Model.Colors)
 						{
 							<div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="@color.Name" name="@Model.Dress.SizeId" value = "@color.Id" >
+                                <input type="radio" class="custom-control-input" id="@color.Name" name="@Model.Dress.ColorId" value = "@color.Id" >
                                 <label class="custom-control-label" for="@color.Name">@color.Name</label>
                             </div>
 						}

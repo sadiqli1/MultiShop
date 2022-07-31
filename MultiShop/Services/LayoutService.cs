@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MultiShop.DAL;
 using MultiShop.Models;
 using MultiShop.ViewModels;
@@ -14,11 +17,13 @@ namespace MultiShop.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _http;
+        private readonly UserManager<AppUser> _userManager;
 
-        public LayoutService(ApplicationDbContext context, IHttpContextAccessor http)
+        public LayoutService(ApplicationDbContext context, IHttpContextAccessor http, UserManager<AppUser> userManager)
         {
             _context = context;
             _http = http;
+            _userManager = userManager;
         }
         public List<Setting> GetSettings()
         {
@@ -29,25 +34,52 @@ namespace MultiShop.Services
         {
             return _context.Categories.ToList();
         }
-        public BasketVM GetBasket()
+        public async Task<BasketVM> GetBasket()
         {
-            string basketstr = _http.HttpContext.Request.Cookies["Basket"];
-
-            if (!string.IsNullOrEmpty(basketstr))
+            if (_http.HttpContext.User.Identity.IsAuthenticated)
             {
-                BasketVM basket = JsonConvert.DeserializeObject<BasketVM>(basketstr);
+                AppUser user = await _userManager.FindByNameAsync(_http.HttpContext.User.Identity.Name);
 
-                foreach (BasketCookieItemVM cookie in basket.BasketCookieItemVMs)
+                List<BasketItem> existed = await _context.BasketItems.Where(b => b.AppUserId == user.Id).ToListAsync();
+
+                if(existed != null)
                 {
-                    Dress existed = _context.Dresses.FirstOrDefault(d => d.Id == cookie.Id);
-                    if (existed == null)
+                    BasketVM basket = new BasketVM();
+                    basket.BasketCookieItemVMs = new List<BasketCookieItemVM>();
+
+                    foreach (BasketItem item in existed)
                     {
-                        basket.BasketCookieItemVMs.Remove(cookie);
+                        BasketCookieItemVM basketCookie = new BasketCookieItemVM()
+                        {
+                            Id = item.DressId,
+                            Quantity = item.Quantity
+                        };
+                        basket.BasketCookieItemVMs.Add(basketCookie);
                     }
+                    return basket;
                 }
-                return basket;
+                return null;
             }
-            return null;
+            else
+            {
+                string basketstr = _http.HttpContext.Request.Cookies["Basket"];
+
+                if (!string.IsNullOrEmpty(basketstr))
+                {
+                    BasketVM basket = JsonConvert.DeserializeObject<BasketVM>(basketstr);
+
+                    foreach (BasketCookieItemVM cookie in basket.BasketCookieItemVMs)
+                    {
+                        Dress existed = _context.Dresses.FirstOrDefault(d => d.Id == cookie.Id);
+                        if (existed == null)
+                        {
+                            basket.BasketCookieItemVMs.Remove(cookie);
+                        }
+                    }
+                    return basket;
+                }
+                return null;
+            }
         }
     }
 }
