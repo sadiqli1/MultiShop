@@ -31,22 +31,17 @@
 			</div>
 		</div>
 		<div class="col-lg-4">
-			<div class="product-offer mb-30" style="height: 200px;">
-				<img class="img-fluid" src="~/assets/img/offer-1.jpg" alt="">
+			@foreach (Advertising advertising in Model.Advertisings)
+		   {
+				<div class="product-offer mb-30" style="height: 200px;">
+				<img class="img-fluid" src="~/assets/img/@advertising.Image" alt="">
 				<div class="offer-text">
-					<h6 class="text-white text-uppercase">Save 20%</h6>
-					<h3 class="text-white mb-3">Special Offer</h3>
-					<a href="" class="btn btn-primary">Shop Now</a>
+					<h6 class="text-white text-uppercase">Save @advertising.Discount%</h6>
+					<h3 class="text-white mb-3">@advertising.Name</h3>
+					<a href="@advertising.Url" class="btn btn-primary">Shop Now</a>
 				</div>
-			</div>
-			<div class="product-offer mb-30" style="height: 200px;">
-				<img class="img-fluid" src="~/assets/img/offer-2.jpg" alt="">
-				<div class="offer-text">
-					<h6 class="text-white text-uppercase">Save 20%</h6>
-					<h3 class="text-white mb-3">Special Offer</h3>
-					<a href="" class="btn btn-primary">Shop Now</a>
-				</div>
-			</div>
+			</div>   
+		   }
 		</div>
 	</div>
 </div>
@@ -116,7 +111,7 @@
 						<img class="img-fluid w-100" src="~/assets/img/@dress.Images.FirstOrDefault(i => i.isMain == true)?.Name" alt="@dress.Images.FirstOrDefault(i => i.isMain == true)?.Alternative">
 						<div class="product-action">
 							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+							<a class="btn btn-outline-dark btn-square" asp-controller = "dress" asp-action = "addwish" asp-route-id = "@dress.Id"><i class="far fa-heart"></i></a>
 							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
 							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
 						</div>
@@ -144,29 +139,22 @@
 <!-- Offer Start -->
 <div class="container-fluid pt-5 pb-3">
 	<div class="row px-xl-5">
-		<div class="col-md-6">
+		@foreach (Advertising advertising1 in Model.Advertisings)
+	   {
+		   <div class="col-md-6">
 			<div class="product-offer mb-30" style="height: 300px;">
-				<img class="img-fluid" src="~/assets/img/offer-1.jpg" alt="">
+				<img class="img-fluid" src="~/assets/img/@advertising1.Image" alt="">
 				<div class="offer-text">
-					<h6 class="text-white text-uppercase">Save 20%</h6>
-					<h3 class="text-white mb-3">Special Offer</h3>
-					<a href="" class="btn btn-primary">Shop Now</a>
+					<h6 class="text-white text-uppercase">Save @advertising1.Discount%</h6>
+					<h3 class="text-white mb-3">@advertising1.Name</h3>
+					<a href="@advertising1.Url" class="btn btn-primary">Shop Now</a>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
-			<div class="product-offer mb-30" style="height: 300px;">
-				<img class="img-fluid" src="~/assets/img/offer-2.jpg" alt="">
-				<div class="offer-text">
-					<h6 class="text-white text-uppercase">Save 20%</h6>
-					<h3 class="text-white mb-3">Special Offer</h3>
-					<a href="" class="btn btn-primary">Shop Now</a>
-				</div>
-			</div>
-		</div>
+	   }
 	</div>
 </div>
-<!-- Offer End -->
+<!-- Offer End --><!-- Offer End --><!-- Offer End --><!-- Offer End --><!-- Offer End --><!-- Offer End --><!-- Offer End --><!-- Offer End --><!-- Offer End -->
 <!-- Products Start -->
 <div class="container-fluid pt-5 pb-3">
 	<h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Recent Products</span></h2>
@@ -180,13 +168,13 @@
 						<img class="img-fluid w-100" src="~/assets/img/@dress.Images.FirstOrDefault(i => i.isMain == true)?.Name" alt="@dress.Images.FirstOrDefault(i => i.isMain == true)?.Alternative">
 						<div class="product-action">
 							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+							<a class="btn btn-outline-dark btn-square" asp-controller = "dress" asp-action = "addwish" asp-route-id = "@dress.Id"><i class="far fa-heart"></i></a>
 							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
 							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
 						</div>
 					</div>
 					<div class="text-center py-4">
-						<a class="h6 text-decoration-none text-truncate" href="">@dress.Name</a>
+						<a class="h6 text-decoration-none text-truncate" asp-controller="dress" asp-action="detail" asp-route-id="@dress.Id">@dress.Name</a>
 						<div class="d-flex align-items-center justify-content-center mt-2">
 							<h5>$@dress.Price</h5><h6 class="text-muted ml-2"><del>$@dress.Price</del></h6>
 						</div>

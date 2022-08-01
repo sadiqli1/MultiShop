@@ -33,7 +33,7 @@ namespace MultiShop.Areas.MultiShopAdmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Category category)
         {
-            if (!ModelState.IsValid) return View(category);
+            if (!ModelState.IsValid) return View();
             if(category.Photo == null)
             {
                 ModelState.AddModelError("Photo", "Please chosse image");
@@ -64,9 +64,9 @@ namespace MultiShop.Areas.MultiShopAdmin.Controllers
 
             Category existed = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
-            if(!ModelState.IsValid) return View(existed);
+            if (existed == null) return NotFound();
 
-            if(existed == null) return NotFound();
+            if (!ModelState.IsValid) return View(existed);
 
             if(category.Photo == null)
             {

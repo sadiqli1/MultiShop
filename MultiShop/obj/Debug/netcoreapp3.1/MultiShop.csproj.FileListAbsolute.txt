@@ -174,3 +174,14 @@ C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\Micro
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Views\Order\Checkout.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Views\Home\Contact.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Advertising\Index.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Advertising\Create.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Advertising\Update.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Advertising\Detail.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Views\Home\WishList.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Color\Index.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Color\Create.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Color\Update.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Color\Detail.cshtml.g.cs
+C:\Users\isasa\Desktop\BackEnd\MultiShop\MultiShop\obj\Debug\netcoreapp3.1\Razor\Areas\MultiShopAdmin\Views\Size\Index.cshtml.g.cs

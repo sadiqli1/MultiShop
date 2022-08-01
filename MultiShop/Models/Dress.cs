@@ -26,9 +26,11 @@ namespace MultiShop.Models
         public List<IFormFile> Photos { get; set; }
         [NotMapped]
         public List<int> PhotoIds { get; set; }
-        [NotMapped]
+        [NotMapped, Required]
         public int ColorId { get; set; }
-        [NotMapped]
+        [NotMapped, Required]
         public int SizeId { get; set; }
+        [NotMapped, Required]
+        public int Quantity { get; set; } = 1;
     }
 }

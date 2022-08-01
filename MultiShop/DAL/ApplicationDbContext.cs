@@ -22,8 +22,10 @@ namespace MultiShop.DAL
         public DbSet<Image> Images { get; set; }
 		public DbSet<BasketItem> BasketItems { get; set; }
 		public DbSet<Order> Orders { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Advertising> Advertisings { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var item in modelBuilder.Model.GetEntityTypes()
                 .SelectMany(e => e.GetProperties())

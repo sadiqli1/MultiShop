@@ -26,21 +26,35 @@ namespace MultiShop.Controllers
             if (id == null || id == 0) return NotFound();
             Dress existed = await _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).FirstOrDefaultAsync(d => d.Id == id);
             if (existed == null) return NotFound();
-            DetailVM detailVM = new DetailVM()
-            {
-                Dress = existed,
-                Colors = _context.Colors.ToList(),
-                Sizes = _context.Sizes.ToList(),
-            };
-            return View(detailVM);
+
+            ViewBag.Colors = _context.Colors.ToList();
+            ViewBag.Sizes = _context.Sizes.ToList();
+
+            ViewBag.SimilarProduct = _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).Where(d => d.CategoryId == existed.CategoryId).ToList();
+
+            return View(existed);
         }
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Detail(DetailVM detailVM, int? id)
+        public async Task<IActionResult> Detail(Dress dress, int? id)
         {
-            return Json(detailVM.Dress == null);
+            if (id is null || id == 0) return NotFound();
+
+            Dress existed = await _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).FirstOrDefaultAsync(d => d.Id == id);
+            ViewBag.Colors = _context.Colors.ToList();
+            ViewBag.Sizes = _context.Sizes.ToList();
+
+            if (dress.SizeId == 0 || dress.ColorId == 0 || dress.Quantity == 0)
+            {
+                ModelState.AddModelError("", "Color, Size and Quantity Required");
+                return View(existed);
+            }
+
+            await AddBasket(dress.Id, dress.SizeId, dress.ColorId, dress.Quantity);
+
+            return RedirectToAction("index", "home");
         }
-        public async Task<IActionResult> AddBasket(int? id)
+        public async Task<IActionResult> AddBasket(int? id, int? size, int? color, int count)
         {
             if (id == null || id == 0) return NotFound();
 
@@ -55,20 +69,50 @@ namespace MultiShop.Controllers
                 if (user == null) return NotFound();
 
                 BasketItem existed = await _context.BasketItems.FirstOrDefaultAsync(b => b.AppUserId == user.Id && b.DressId == dress.Id);
+
+
                 if (existed == null)
                 {
                     existed = new BasketItem()
                     {
                         Dress = dress,
                         AppUser = user,
-                        Quantity = 1,
-                        Price = dress.Price
+                        Quantity = count,
+                        Price = dress.Price,
+                        Color = _context.Colors.FirstOrDefault(c => c.Id == color).Name,
+                        Size = _context.Sizes.FirstOrDefault(s => s.Id == size).Name
                     };
                     _context.BasketItems.Add(existed);
                 }
                 else
                 {
-                    existed.Quantity++;
+                    if (color != null || size != null)
+                    {
+                        bool exiscolor = _context.Colors.FirstOrDefault(c => c.Id == color).Name == existed.Color;
+                        bool exissize = _context.Sizes.FirstOrDefault(c => c.Id == size).Name == existed.Size;
+
+                        if (exiscolor == false || exissize == false)
+                        {
+                            existed = new BasketItem()
+                            {
+                                Dress = dress,
+                                AppUser = user,
+                                Quantity = count,
+                                Price = dress.Price,
+                                Color = _context.Colors.FirstOrDefault(c => c.Id == color).Name,
+                                Size = _context.Sizes.FirstOrDefault(s => s.Id == size).Name
+                            };
+                            _context.BasketItems.Add(existed);
+                        }
+                        else
+                        {
+                            existed.Quantity++;
+                        }
+                    }
+                    else
+                    {
+                        existed.Quantity++;
+                    }
                 }
 
                 await _context.SaveChangesAsync();
@@ -87,7 +131,9 @@ namespace MultiShop.Controllers
                     BasketCookieItemVM cookiItem = new BasketCookieItemVM()
                     {
                         Id = dress.Id,
-                        Quantity = 1
+                        Quantity = count,
+                        Color = _context.Colors.FirstOrDefault(c => c.Id == color).Name,
+                        Size = _context.Sizes.FirstOrDefault(s => s.Id == size).Name
                     };
                     basket.BasketCookieItemVMs.Add(cookiItem);
                     basket.TotalPrice = dress.Price;
@@ -97,20 +143,44 @@ namespace MultiShop.Controllers
                     basket = JsonConvert.DeserializeObject<BasketVM>(basketstr);
 
                     BasketCookieItemVM existed = basket.BasketCookieItemVMs.FirstOrDefault(b => b.Id == id);
+
                     if (existed == null)
                     {
                         BasketCookieItemVM cookiItem = new BasketCookieItemVM()
                         {
                             Id = dress.Id,
-                            Quantity = 1
+                            Quantity = count,
+                            Color = _context.Colors.FirstOrDefault(c => c.Id == color).Name,
+                            Size = _context.Sizes.FirstOrDefault(s => s.Id == size).Name
                         };
                         basket.BasketCookieItemVMs.Add(cookiItem);
                         basket.TotalPrice += dress.Price;
                     }
                     else
                     {
-                        existed.Quantity++;
-                        basket.TotalPrice += dress.Price;
+                        if (color != null || size != null)
+                        {
+                            bool exiscolor = _context.Colors.FirstOrDefault(c => c.Id == color).Name == existed.Color;
+                            bool exissize = _context.Sizes.FirstOrDefault(c => c.Id == size).Name == existed.Size;
+
+                            if (exiscolor == false || exissize == false)
+                            {
+                                BasketCookieItemVM cookiItem = new BasketCookieItemVM()
+                                {
+                                    Id = dress.Id,
+                                    Quantity = count,
+                                    Color = _context.Colors.FirstOrDefault(c => c.Id == color).Name,
+                                    Size = _context.Sizes.FirstOrDefault(s => s.Id == size).Name
+                                };
+                                basket.BasketCookieItemVMs.Add(cookiItem);
+                                basket.TotalPrice += dress.Price;
+                            }
+                        }
+                        else
+                        {
+                            existed.Quantity++;
+                            basket.TotalPrice += dress.Price;
+                        }
                     }
                 }
 
@@ -135,7 +205,7 @@ namespace MultiShop.Controllers
 
                 if (existed != null)
                 {
-                    if(existed.Quantity > 1)
+                    if (existed.Quantity > 1)
                     {
                         existed.Quantity -= 1;
                     }
@@ -175,6 +245,46 @@ namespace MultiShop.Controllers
 
             return RedirectToAction("Cart", "Home");
         }
+        public async Task<IActionResult> RemoveAllBasket(int? id)
+        {
+            if (id == null || id == 0) return NotFound();
+
+            Dress dress = _context.Dresses.FirstOrDefault(d => d.Id == id);
+
+            if (User.Identity.IsAuthenticated)
+            {
+                AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+                BasketItem existed = await _context.BasketItems.FirstOrDefaultAsync(b => b.AppUserId == user.Id && b.DressId == id);
+
+                if (existed != null)
+                {
+                    _context.BasketItems.Remove(existed);
+                }
+                _context.SaveChanges();
+            }
+            else
+            {
+                BasketVM basket = JsonConvert.DeserializeObject<BasketVM>(HttpContext.Request.Cookies["Basket"]);
+                if (basket != null)
+                {
+                    List<BasketCookieItemVM> removable = new List<BasketCookieItemVM>();
+
+                    foreach (BasketCookieItemVM item in basket.BasketCookieItemVMs)
+                    {
+                        if (item.Id == id)
+                        {
+                            basket.TotalPrice = 0;
+                            removable.Add(item);
+                        }
+                    }
+                    basket.BasketCookieItemVMs.RemoveAll(b => removable.Any(r => r.Id == b.Id));
+                }
+                string basketstr = JsonConvert.SerializeObject(basket);
+                HttpContext.Response.Cookies.Append("Basket", basketstr);
+            }
+            return RedirectToAction("Cart", "Home");
+        }
         public IActionResult ShowBasket()
         {
             if (HttpContext.Request.Cookies["basket"] == null) return NotFound();
@@ -184,65 +294,17 @@ namespace MultiShop.Controllers
             return Content(HttpContext.Request.Cookies["Basket"]);
         }
 
-
-        public async Task<IActionResult> AddWish(int? id)
+        public IActionResult AddWish(int? id)
         {
-            //if (id is null || id == 0) return NotFound();
-
-            //Dress dress = _context.Dresses.FirstOrDefault(d => d.Id == id);
-            //if (dress == null) return NotFound();
-
-            //string wishstr = HttpContext.Request.Cookies["Wish"];
-
-            //WishVM wish;
-
-            //if (string.IsNullOrEmpty(wishstr))
-            //{
-            //    wish = new WishVM();
-            //    wish.WishCookieItemVMs = new List<WishCookieItemVM>();
-            //    WishCookieItemVM cookieItem = new WishCookieItemVM()
-            //    {
-            //        Id = dress.Id,
-            //        Quantity = 1
-            //    };
-            //    wish.WishCookieItemVMs.Add(cookieItem);
-            //    wish.TotalPrice = dress.Price;
-            //}
-            //else
-            //{
-            //    wish = JsonConvert.DeserializeObject<WishVM>(wishstr);
-
-            //    WishCookieItemVM existed = wish.WishCookieItemVMs.FirstOrDefault(w => w.Id == id);
-
-            //    if(existed == null)
-            //    {
-            //        WishCookieItemVM cookieItem = new WishCookieItemVM()
-            //        {
-            //            Id = dress.Id,
-            //            Quantity = 1
-            //        };
-            //        wish.WishCookieItemVMs.Add(cookieItem);
-            //        wish.TotalPrice = dress.Price;
-            //    }
-            //    else
-            //    {
-            //        existed.Quantity++;
-            //        wish.TotalPrice += dress.Price;
-            //    }
-            //}
-
-            //wishstr = JsonConvert.SerializeObject(wish);
-
-            //HttpContext.Response.Cookies.Append("Wish", wishstr);
-
             if (id == null || id == 0) return NotFound();
 
             Dress dress = _context.Dresses.FirstOrDefault(d => d.Id == id);
             if (dress == null) return NotFound();
 
+            #region Wish
             //if (User.Identity.IsAuthenticated && User.IsInRole("Member"))
             //{
-            //    string basketstr = HttpContext.Request.Cookies["Basket"];
+            //    string wishstr = HttpContext.Request.Cookies["Wish"];
 
             //    AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
             //    if (user == null) return NotFound();
@@ -266,52 +328,75 @@ namespace MultiShop.Controllers
 
             //    await _context.SaveChangesAsync();
             //}
+            #endregion
+
+            string wishstr = HttpContext.Request.Cookies["Wish"];
+
+            WishVM wish;
+
+            if (string.IsNullOrEmpty(wishstr))
+            {
+                wish = new WishVM();
+                wish.WishCookieItemVMs = new List<WishCookieItemVM>();
+
+                WishCookieItemVM cookiItem = new WishCookieItemVM()
+                {
+                    Id = dress.Id,
+                    Quantity = 1
+                };
+                wish.WishCookieItemVMs.Add(cookiItem);
+                wish.TotalPrice = dress.Price;
+            }
             else
             {
-                string wishstr = HttpContext.Request.Cookies["Basket"];
+                wish = JsonConvert.DeserializeObject<WishVM>(wishstr);
 
-                WishVM wish;
+                WishCookieItemVM existed = wish.WishCookieItemVMs.FirstOrDefault(b => b.Id == id);
 
-                if (string.IsNullOrEmpty(wishstr))
+                if (existed == null)
                 {
-                    wish = new WishVM();
-                    wish.WishCookieItemVMs = new List<WishCookieItemVM>();
-
                     WishCookieItemVM cookiItem = new WishCookieItemVM()
                     {
                         Id = dress.Id,
                         Quantity = 1
                     };
                     wish.WishCookieItemVMs.Add(cookiItem);
-                    wish.TotalPrice = dress.Price;
+                    wish.TotalPrice += dress.Price;
                 }
                 else
                 {
-                    wish = JsonConvert.DeserializeObject<WishVM>(wishstr);
-
-                    WishCookieItemVM existed = wish.WishCookieItemVMs.FirstOrDefault(b => b.Id == id);
-                    if (existed == null)
-                    {
-                        WishCookieItemVM cookiItem = new WishCookieItemVM()
-                        {
-                            Id = dress.Id,
-                            Quantity = 1
-                        };
-                        wish.WishCookieItemVMs.Add(cookiItem);
-                        wish.TotalPrice += dress.Price;
-                    }
-                    else
-                    {
-                        existed.Quantity++;
-                        wish.TotalPrice += dress.Price;
-                    }
+                    wish.WishCookieItemVMs.Remove(existed);
+                    wish.TotalPrice -= dress.Price;
                 }
-
-                wishstr = JsonConvert.SerializeObject(wish);
-                HttpContext.Response.Cookies.Append("Basket", wishstr);
             }
 
-            return RedirectToAction(nameof(ShowWishList));
+            wishstr = JsonConvert.SerializeObject(wish);
+            HttpContext.Response.Cookies.Append("Wish", wishstr);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult RemoveWish(int? id)
+        {
+            WishVM wish = JsonConvert.DeserializeObject<WishVM>(HttpContext.Request.Cookies["Wish"]);
+            if (wish != null)
+            {
+                List<WishCookieItemVM> removable = new List<WishCookieItemVM>();
+
+                foreach (WishCookieItemVM item in wish.WishCookieItemVMs)
+                {
+                    if (item.Id == id)
+                    {
+                        wish.TotalPrice = 0;
+                        removable.Add(item);
+                    }
+                }
+                wish.WishCookieItemVMs.RemoveAll(b => removable.Any(r => r.Id == b.Id));
+            }
+            string wishstr = JsonConvert.SerializeObject(wish);
+            HttpContext.Response.Cookies.Append("Basket", wishstr);
+
+            return RedirectToAction("WishList", "Home");
         }
         public IActionResult ShowWishList()
         {

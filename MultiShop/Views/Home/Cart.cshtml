@@ -26,6 +26,8 @@
 						<th>Products</th>
 						<th>Price</th>
 						<th>Quantity</th>
+						<th>Color</th>
+						<th>Size</th>
 						<th>Total</th>
 						<th>Remove</th>
 					</tr>
@@ -53,8 +55,10 @@
 										</div>
 									</div>
 								</td>
+								<td class="align-middle">@item.Color</td>
+								<td class="align-middle">@item.Size</td>
 								<td class="align-middle">$@(item.Quantity * item.Dress.Price)</td>
-								<td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+								<td class="align-middle"><a asp-controller = "dress" asp-action = "RemoveAllBasket" asp-route-id = "@item.Dress.Id" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></a></td>
 							</tr>
 						}
 					}else{

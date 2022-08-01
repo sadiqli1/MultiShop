@@ -16,8 +16,7 @@ namespace MultiShop.Controllers
         private readonly ApplicationDbContext _context;
 		private readonly UserManager<AppUser> _userManager;
 
-		public HomeController(ApplicationDbContext context, UserManager<AppUser> userManager
-            )
+		public HomeController(ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
 			_userManager = userManager;
@@ -29,6 +28,7 @@ namespace MultiShop.Controllers
                 Dresses = await _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).ToListAsync(),
                 Sliders = await _context.Sliders.ToListAsync(),
                 Categories = await _context.Categories.Include(c => c.Dresses).ToListAsync(),
+                Advertisings = await _context.Advertisings.OrderByDescending(a => a.Id).Take(2).ToListAsync()
             };
             return View(model);
         }
@@ -56,7 +56,9 @@ namespace MultiShop.Controllers
                         BasketItemVM basketItem = new BasketItemVM
                         {
                             Dress = await _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).FirstOrDefaultAsync(d => d.Id == item.DressId),
-                            Quantity = item.Quantity
+                            Quantity = item.Quantity,
+                            Color = item.Color,
+                            Size = item.Size
                         };
                         cartBasket.BasketItemVMs.Add(basketItem);
                         cartBasket.ToatlPrice += item.Price * item.Quantity;
@@ -84,6 +86,8 @@ namespace MultiShop.Controllers
                         {
                             Dress = existed,
                             Quantity = cookie.Quantity,
+                            Color = cookie.Color,
+                            Size = cookie.Size,
                         };
                         cartBasket.BasketItemVMs.Add(basketItem);
                         cartBasket.ToatlPrice = basket.TotalPrice;
@@ -93,6 +97,55 @@ namespace MultiShop.Controllers
             }
             HttpContext.Response.Cookies.Delete("Basket");
             return View();
+        }
+        public IActionResult WishList()
+        {
+            string wishstr = HttpContext.Request.Cookies["Wish"];
+
+            if (wishstr != null)
+            {
+                WishVM wish = JsonConvert.DeserializeObject<WishVM>(wishstr);
+                WishListVM wishList = new WishListVM();
+                wishList.WishItemVMs = new List<WishItemVM>();
+                foreach (WishCookieItemVM cookie in wish.WishCookieItemVMs)
+                {
+                    Dress existed = _context.Dresses.Include(d => d.Images).Include(d => d.Category).Include(d => d.DressInformation).FirstOrDefault(d => d.Id == cookie.Id);
+                    if (existed == null)
+                    {
+                        wish.WishCookieItemVMs.Remove(cookie);
+                        continue;
+                    }
+                    WishItemVM wishItem = new WishItemVM()
+                    {
+                        Dress = existed,
+                        Quantity = cookie.Quantity
+                    };
+                    wishList.WishItemVMs.Add(wishItem);
+                    wishList.ToatlPrice = wish.TotalPrice;
+                }
+                return View(wishList);
+            }
+            return View();
+        }
+        public IActionResult Contact()
+        {
+            return View();
+        }
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> Contact(ContactVM contact)
+        {
+            if (!ModelState.IsValid) return View();
+            Message message = new Message()
+            {
+                Name = contact.Name,
+                Email = contact.Email,
+                Subject = contact.Subject,
+                Messag = contact.Message
+            };
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

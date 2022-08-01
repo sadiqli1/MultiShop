@@ -1,6 +1,7 @@
-﻿@model DetailVM
+﻿@model Dress
 @{
 	ViewData["Title"] = "Detail";
+	List<Dress> similarproduct = ViewBag.SimilarProduct;
 }
 
 <!-- Breadcrumb Start -->
@@ -22,7 +23,7 @@
 		<div class="col-lg-5 mb-30">
 			<div id="product-carousel" class="carousel slide" data-ride="carousel">
 				<div class="carousel-inner bg-light">
-					@foreach (Image image in Model.Dress.Images)
+					@foreach (Image image in Model.Images)
 					{
 						<div class="carousel-item @(image.isMain == true ? "active" : "")">
 							<img class="w-100 h-100" src="~/assets/img/@image.Name" alt="@image.Alternative">
@@ -40,7 +41,7 @@
 
 		<div class="col-lg-7 h-auto mb-30">
 			<div class="h-100 bg-light p-30">
-				<h3>@Model.Dress.Name</h3>
+				<h3>@Model.Name</h3>
 				<div class="d-flex mb-3">
 					<div class="text-primary mr-2">
 						<small class="fas fa-star"></small>
@@ -51,50 +52,56 @@
 					</div>
 					<small class="pt-1">(99 Reviews)</small>
 				</div>
-				<h3 class="font-weight-semi-bold mb-4">$@Model.Dress.Price</h3>
-				<p class="mb-4">@(Model.Dress.Desc.Length > 90 ? Model.Dress.Desc.Substring(0, 90) : Model.Dress.Desc)</p>
+				<h3 class="font-weight-semi-bold mb-4">$@Model.Price</h3>
+				<p class="mb-4">@(Model.Desc.Length > 90 ? Model.Desc.Substring(0, 90) : Model.Desc)</p>
+						<div class = "alert alert-danger" asp-validation-summary = "ModelOnly"></div>
+
 				<div class="d-flex mb-3">
+
 					<strong class="text-dark mr-3">Sizes:</strong>
-					<form method = "post">
-						@foreach (Size size in Model.Sizes)
+					<form method="post">
+						@foreach (Size size in ViewBag.Sizes)
 						{
 							<div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="@size.Name" name="@Model.Dress.SizeId" value = "@size.Id" >
-                                <label class="custom-control-label" for="@size.Name">@size.Name</label>		
-                            </div>
+								<input type="radio" class="custom-control-input" id="@size.Name" name="SizeId" value="@size.Id">
+								<label class="custom-control-label" for="@size.Name">@size.Name</label>
+							</div>
 						}
 
 						<br /><strong class="text-dark mr-3">Colors:</strong>
-						@foreach (Color color in Model.Colors)
+						@foreach (Color color in ViewBag.Colors)
 						{
 							<div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="@color.Name" name="@Model.Dress.ColorId" value = "@color.Id" >
-                                <label class="custom-control-label" for="@color.Name">@color.Name</label>
-                            </div>
+								<input type="radio" class="custom-control-input" id="@color.Name" name="ColorId" value="@color.Id">
+								<label class="custom-control-label" for="@color.Name">@color.Name</label>
+							</div>
 						}
-						<button type = "submit">submit</button>
+						<div class="d-flex align-items-center mb-4 pt-2">
+							<div class="input-group quantity mr-3" style="width: 130px;">
+								<div class="input-group-btn">
+									<button class="btn btn-primary btn-minus asd">
+										<i class="fa fa-minus"></i>
+									</button>
+								</div>
+								<input class="form-control bg-secondary border-0 text-center" asp-for = "Quantity" >
+								<div class="input-group-btn">
+									<button class="btn btn-primary btn-plus asd">
+										<i class="fa fa-plus"></i>
+									</button>
+								</div>
+							</div>
+							@*<button asp-controller="dress" asp-action="addbasket" asp-route-id="@Model.Id" class="btn btn-primary px-3">
+								<i class="fa fa-shopping-cart mr-1"></i> Add To
+								Cart
+							</button>*@
+
+							<button type = "submit">
+								<i class="fa fa-shopping-cart mr-1"></i>Add To Cart
+								</button>
+						</div>
 					</form>
 				</div>
-				
-				<div class="d-flex align-items-center mb-4 pt-2">
-					<div class="input-group quantity mr-3" style="width: 130px;">
-						<div class="input-group-btn">
-							<button class="btn btn-primary btn-minus">
-								<i class="fa fa-minus"></i>
-							</button>
-						</div>
-						<input type="text" class="form-control bg-secondary border-0 text-center" value="1">
-						<div class="input-group-btn">
-							<button class="btn btn-primary btn-plus">
-								<i class="fa fa-plus"></i>
-							</button>
-						</div>
-					</div>
-					<a asp-controller="dress" asp-action="addbasket" asp-route-id="@Model.Dress.Id" class="btn btn-primary px-3">
-						<i class="fa fa-shopping-cart mr-1"></i> Add To
-						Cart
-					</a>
-				</div>
+
 				<div class="d-flex pt-2">
 					<strong class="text-dark mr-2">Share on:</strong>
 					<div class="d-inline-flex">
@@ -126,12 +133,12 @@
 				<div class="tab-content">
 					<div class="tab-pane fade show active" id="tab-pane-1">
 						<h4 class="mb-3">Product Description</h4>
-						<p>@Model.Dress.Desc</p>
+						<p>@Model.Desc</p>
 						<p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
 					</div>
 					<div class="tab-pane fade" id="tab-pane-2">
-						<h4 class="mb-3">@Model.Dress.DressInformation.Name</h4>
-						<p>@Model.Dress.DressInformation.Article</p>
+						<h4 class="mb-3">@Model.DressInformation.Name</h4>
+						<p>@Model.DressInformation.Article</p>
 						<div class="row">
 							<div class="col-md-6">
 								<ul class="list-group list-group-flush">
@@ -231,9 +238,14 @@
 	<div class="row px-xl-5">
 		<div class="col">
 			<div class="owl-carousel related-carousel">
+				
+				@if (similarproduct != null)
+				{
+					@foreach (Dress dress in similarproduct)
+				{
 				<div class="product-item bg-light">
 					<div class="product-img position-relative overflow-hidden">
-						<img class="img-fluid w-100" src="~/assets/img/product-1.jpg" alt="">
+						<img class="img-fluid w-100" src="~/assets/img/@dress.Images.FirstOrDefault(i => i.isMain == true).Name" alt="@dress.Images.FirstOrDefault(i => i.isMain == true).Alternative">
 						<div class="product-action">
 							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
 							<a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
@@ -242,9 +254,9 @@
 						</div>
 					</div>
 					<div class="text-center py-4">
-						<a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>
+						<a class="h6 text-decoration-none text-truncate" href="">@dress.Name</a>
 						<div class="d-flex align-items-center justify-content-center mt-2">
-							<h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+							<h5>$@dress.Price</h5><h6 class="text-muted ml-2"><del>$@dress.Price</del></h6>
 						</div>
 						<div class="d-flex align-items-center justify-content-center mb-1">
 							<small class="fa fa-star text-primary mr-1"></small>
@@ -255,109 +267,22 @@
 							<small>(99)</small>
 						</div>
 					</div>
-				</div>
-				<div class="product-item bg-light">
-					<div class="product-img position-relative overflow-hidden">
-						<img class="img-fluid w-100" src="~/assets/img/product-2.jpg" alt="">
-						<div class="product-action">
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-						</div>
-					</div>
-					<div class="text-center py-4">
-						<a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>
-						<div class="d-flex align-items-center justify-content-center mt-2">
-							<h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-						</div>
-						<div class="d-flex align-items-center justify-content-center mb-1">
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small>(99)</small>
-						</div>
-					</div>
-				</div>
-				<div class="product-item bg-light">
-					<div class="product-img position-relative overflow-hidden">
-						<img class="img-fluid w-100" src="~/assets/img/product-3.jpg" alt="">
-						<div class="product-action">
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-						</div>
-					</div>
-					<div class="text-center py-4">
-						<a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>
-						<div class="d-flex align-items-center justify-content-center mt-2">
-							<h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-						</div>
-						<div class="d-flex align-items-center justify-content-center mb-1">
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small>(99)</small>
-						</div>
-					</div>
-				</div>
-				<div class="product-item bg-light">
-					<div class="product-img position-relative overflow-hidden">
-						<img class="img-fluid w-100" src="~/assets/img/product-4.jpg" alt="">
-						<div class="product-action">
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-						</div>
-					</div>
-					<div class="text-center py-4">
-						<a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>
-						<div class="d-flex align-items-center justify-content-center mt-2">
-							<h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-						</div>
-						<div class="d-flex align-items-center justify-content-center mb-1">
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small>(99)</small>
-						</div>
-					</div>
-				</div>
-				<div class="product-item bg-light">
-					<div class="product-img position-relative overflow-hidden">
-						<img class="img-fluid w-100" src="~/assets/img/product-5.jpg" alt="">
-						<div class="product-action">
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-							<a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-						</div>
-					</div>
-					<div class="text-center py-4">
-						<a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>
-						<div class="d-flex align-items-center justify-content-center mt-2">
-							<h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-						</div>
-						<div class="d-flex align-items-center justify-content-center mb-1">
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small class="fa fa-star text-primary mr-1"></small>
-							<small>(99)</small>
-						</div>
-					</div>
-				</div>
+				</div>	
+				}
+				}
 			</div>
 		</div>
 	</div>
 </div>
 <!-- Products End -->
+
+@section ScriptRefresh{
+	<script>
+		let btns = document.querySelectorAll(".btn");
+		btns.forEach(btn => {
+			btn.addEventListener("click", (e) => {
+				e.preventDefault();
+			})
+		})
+	</script>
+}

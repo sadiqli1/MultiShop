@@ -235,6 +235,13 @@ namespace MultiShop.Areas.MultiShopAdmin.Controllers
                     }
                 }
             }
+            List<Image> images = new List<Image>();
+            foreach (Image img in existed.Images)
+            {
+                images.Add(img);
+            }
+            _context.Entry(existed).CurrentValues.SetValues(dress);
+            existed.Images.AddRange(images);
             _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));

@@ -11,5 +11,7 @@ namespace MultiShop.Models
 		public int Quantity { get; set; }
 		public string AppUserId { get; set; }
 		public AppUser AppUser { get; set; }
-	}
+        public string Color { get; set; }
+        public string Size { get; set; }
+    }
 }

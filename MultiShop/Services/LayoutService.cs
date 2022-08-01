@@ -68,18 +68,46 @@ namespace MultiShop.Services
                 {
                     BasketVM basket = JsonConvert.DeserializeObject<BasketVM>(basketstr);
 
-                    foreach (BasketCookieItemVM cookie in basket.BasketCookieItemVMs)
+                    if(basket != null)
                     {
-                        Dress existed = _context.Dresses.FirstOrDefault(d => d.Id == cookie.Id);
-                        if (existed == null)
+                        foreach (BasketCookieItemVM cookie in basket.BasketCookieItemVMs)
                         {
-                            basket.BasketCookieItemVMs.Remove(cookie);
+                            Dress existed = _context.Dresses.FirstOrDefault(d => d.Id == cookie.Id);
+                            if (existed == null)
+                            {
+                                basket.BasketCookieItemVMs.Remove(cookie);
+                            }
                         }
+                        return basket;
                     }
-                    return basket;
                 }
                 return null;
             }
+        }
+        public WishVM GetWish()
+        {
+            string wishstr = _http.HttpContext.Request.Cookies["Wish"];
+
+            if (!string.IsNullOrEmpty(wishstr))
+            {
+                WishVM wish = JsonConvert.DeserializeObject<WishVM>(wishstr);
+
+                foreach (WishCookieItemVM cookie in wish.WishCookieItemVMs)
+                {
+                    Dress existed = _context.Dresses.FirstOrDefault(d => d.Id == cookie.Id);
+                    if (existed == null)
+                    {
+                        wish.WishCookieItemVMs.Remove(cookie);
+                    }
+                }
+                return wish;
+            }
+            return null;
+        }
+        public List<Message> GetMessage()
+        {
+            List<Message> msgs = _context.Messages.ToList();
+            return msgs;
         }
     }
 }

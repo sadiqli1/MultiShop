@@ -1,0 +1,23 @@
+﻿@model Advertising
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<div class = "main-panel">
+    <div class = "d-flex">
+        <h4 class = "text-warning">Image:</h4>
+        <img src = "~/assets/img/@Model.Image" />
+    </div>
+    <div class = "mt-3 d-flex">
+        <h4 class = "text-warning">Name:</h4>
+        <h3>@Model.Name</h3>
+    </div>
+    <div class = "mt-3 d-flex">
+        <h4 class = "text-warning">Discount:</h4>
+        <h3>@Model.Discount</h3>
+    </div>
+    <div class = "mt-3 d-flex">
+        <h4 class = "text-warning">Url:</h4>
+        <a href = "@Model.Url">Url</a>
+    </div>
+</div>
